@@ -23,13 +23,21 @@ const app = express()
 //     res.send("hello from the server")
 // })
 
+//GET /users => middleware chain => request handler
+
+app.use("/",(req,res,next)=>{
+    console.log("handling / route");
+    next()
+    
+})
+
 app.use("/user",(req,res,next)=>{
     console.log("Handling the route user!");
     next()
 },
 (req,res,next)=>{
     console.log("Handling the route user 2!");
-    next()
+    res.send("2nd response")
 },
 (req,res,next)=>{
     console.log("Handling the route user 3!");

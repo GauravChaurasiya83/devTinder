@@ -2,7 +2,7 @@ const express = require("express")
 
 const app = express()
 
-const { adminAuth, userAuth } = require('./middlewares/auth')
+// const { adminAuth, userAuth } = require('./middlewares/auth')
 
 // //this will only handle GET call to /user
 // app.get("/user",(req,res)=>{
@@ -23,6 +23,8 @@ const { adminAuth, userAuth } = require('./middlewares/auth')
 // app.use("/test",(req,res)=>{
 //     res.send("hello from the server")
 // })
+
+///////////////////////////
 
 //GET /users => middleware chain => request handler
 
@@ -46,22 +48,43 @@ const { adminAuth, userAuth } = require('./middlewares/auth')
 // }
 // )
 
-app.use("/admin",adminAuth)
-app.use("/user",userAuth)
+/////////////////////////////////////////
 
-app.get("/user",(req,res)=>{
-    //logic for sending data from db
-    res.send("user data sent")
+// app.use("/admin",adminAuth)
+// app.use("/user",userAuth)
+
+// app.get("/user",(req,res)=>{
+//     //logic for sending data from db
+//     res.send("user data sent")
+// })
+
+// app.get("/admin/getAllUsers",(req,res)=>{
+//     //logic for sending data from db
+//     res.send("all data sent")
+// })
+// app.get("/admin/deleteUser",(req,res)=>{
+//     //logic for deleting data from db
+//     res.send("deleted user")
+// })
+///////////////////////////
+
+//Error Handling
+app.use("/",(err,req,res,next)=>{
+    if(err){
+        res.status(500).send("something went wrong")
+    }
+})
+app.get("/getUserData",(req,res)=>{
+    throw new Error("sdsdsdsadsa");
+    res.send("User data sent")
+})
+app.use("/",(err,req,res,next)=>{
+    if(err){
+        res.status(500).send("something went wrong")
+    }
 })
 
-app.get("/admin/getAllUsers",(req,res)=>{
-    //logic for sending data from db
-    res.send("all data sent")
-})
-app.get("/admin/deleteUser",(req,res)=>{
-    //logic for deleting data from db
-    res.send("deleted user")
-})
+
 
 app.listen(3000,()=>{
     console.log("server started successfully at port 3000");

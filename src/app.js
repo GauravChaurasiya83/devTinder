@@ -2,6 +2,8 @@ const express = require("express")
 
 const app = express()
 
+const {connectDB} = require('./config/database')
+const {User} = require("./models/user")
 // const { adminAuth, userAuth } = require('./middlewares/auth')
 
 // //this will only handle GET call to /user
@@ -69,24 +71,64 @@ const app = express()
 ///////////////////////////
 
 //Error Handling
-app.use("/",(err,req,res,next)=>{
-    if(err){
-        res.status(500).send("something went wrong")
+// app.use("/",(err,req,res,next)=>{
+//     if(err){
+//         res.status(500).send("something went wrong")
+//     }
+// })
+// app.get("/getUserData",(req,res)=>{
+//     throw new Error("sdsdsdsadsa");
+//     res.send("User data sent")
+// })
+// app.use("/",(err,req,res,next)=>{
+//     if(err){
+//         res.status(500).send("something went wrong")
+//     }
+// })
+
+app.post("/signup",async(req,res)=>{
+    //creating a new user instance of the user model
+    const user = new User({
+        firstName:"Sachin",
+        lastName:"Tendulkar",
+        emailId:"sachin@tendulkar",
+        password:"sachin@123"
+    })
+
+    try{
+        await user.save()
+        res.send("data added successfully")
+    }
+    catch(err){
+        res.status(400).send("error in saving the user" + err.message)
     }
 })
-app.get("/getUserData",(req,res)=>{
-    throw new Error("sdsdsdsadsa");
-    res.send("User data sent")
-})
-app.use("/",(err,req,res,next)=>{
-    if(err){
-        res.status(500).send("something went wrong")
-    }
-})
 
 
 
-app.listen(3000,()=>{
+
+
+
+
+
+
+
+
+
+connectDB()
+    .then(()=>{
+    console.log("db connection established successfully");
+    app.listen(3000,()=>{
     console.log("server started successfully at port 3000");
     
 })
+    
+    })
+    .catch((err)=>{
+        console.error("database cannot be connected!!");
+        
+    })
+
+
+
+//mongodb+srv://NamsteNode:Ymz9HzBBSKZitfuY@namastenode.wxze5pg.mongodb.net/

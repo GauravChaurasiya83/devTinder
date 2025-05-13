@@ -86,14 +86,14 @@ const {User} = require("./models/user")
 //     }
 // })
 
+
+app.use(express.json()) //this middleware will convert all incoming json objects to js object
+
 app.post("/signup",async(req,res)=>{
+    console.log(req.body); //printing the incoming JS object(which is converted from json) in the console
+    
     //creating a new user instance of the user model
-    const user = new User({
-        firstName:"Sachin",
-        lastName:"Tendulkar",
-        emailId:"sachin@tendulkar",
-        password:"sachin@123"
-    })
+    const user = new User(req.body)
 
     try{
         await user.save()
@@ -104,25 +104,13 @@ app.post("/signup",async(req,res)=>{
     }
 })
 
-
-
-
-
-
-
-
-
-
-
-
 connectDB()
     .then(()=>{
     console.log("db connection established successfully");
     app.listen(3000,()=>{
     console.log("server started successfully at port 3000");
     
-})
-    
+})  
     })
     .catch((err)=>{
         console.error("database cannot be connected!!");

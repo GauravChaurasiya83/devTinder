@@ -96,6 +96,10 @@ app.post("/signup",async(req,res)=>{
     const user = new User(req.body)
 
     try{
+        const userSkills = req.body.skills
+        if(userSkills.length>5){
+            throw new Error("maximum skills input limit reached")
+        }
         await user.save()
         res.send("data added successfully")
     }
@@ -106,21 +110,24 @@ app.post("/signup",async(req,res)=>{
 
 //get(fetching) one user by anyone parameter like emailId
 app.get("/user",async(req,res)=>{
-    const userEmail = req.body.emailId
+    
     //this is "findById"
     try{
-        const users = await User.findById("681f4bac89c740eab0c75bcb")
+        const users = await User.findById("68239ce9b808d28e5ea8eef2")
         if (users.length===0){
-            res.status(404).send("email not found")
+            res.status(404).send("user not found")
         }
         else{
             res.send(users)
+            
+            
         }
     }
     catch(err){
         res.status(400).send("something went wrong")
     }
     //this is "find (by providing any filter)"
+    // const userEmail = req.body.emailId
     // try{
     //     const users = await User.find({emailId:userEmail})
     //     if (users.length===0){
@@ -161,10 +168,19 @@ app.delete("/user",async(req,res)=>{
 })
 
 //update a user
-app.patch("/user",async(req,res)=>{
+app.patch("/user/:userId",async(req,res)=>{
     const data = req.body
-    const userId = req.body.userId
+    const userId = req.params?.userId
     try{
+        const ALLOWED_UPDATES = ["photoUrl","about","gender","skills","age"]
+        const isUpdateAllowed = Object.keys(data).every((k)=>ALLOWED_UPDATES.includes(k))
+        const userSkills = req.body.skills
+        if(userSkills.length>5){
+            throw new Error("maximum skills input limit reached")
+        }
+        if(!isUpdateAllowed){
+            throw new Error("Update not allowed")
+        }
         const users = await User.findByIdAndUpdate({_id:userId},data,{
             runValidators:true //this will validate if the gender whihc is being passed is valide or not
         }) // we can also give like this const users = await User.findByIdAndUpdate(userId,data)

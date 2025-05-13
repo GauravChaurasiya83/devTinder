@@ -165,11 +165,13 @@ app.patch("/user",async(req,res)=>{
     const data = req.body
     const userId = req.body.userId
     try{
-        const users = await User.findByIdAndUpdate({_id:userId},data) // we can also give like this const users = await User.findByIdAndUpdate(userId,data)
+        const users = await User.findByIdAndUpdate({_id:userId},data,{
+            runValidators:true //this will validate if the gender whihc is being passed is valide or not
+        }) // we can also give like this const users = await User.findByIdAndUpdate(userId,data)
         res.send("user updated successfully")
     }
     catch(err){
-        res.status(400).send("something went wrong")
+        res.status(400).send("Update Failed" + err.message)
     }
 })
 

@@ -104,6 +104,76 @@ app.post("/signup",async(req,res)=>{
     }
 })
 
+//get(fetching) one user by anyone parameter like emailId
+app.get("/user",async(req,res)=>{
+    const userEmail = req.body.emailId
+    //this is "findById"
+    try{
+        const users = await User.findById("681f4bac89c740eab0c75bcb")
+        if (users.length===0){
+            res.status(404).send("email not found")
+        }
+        else{
+            res.send(users)
+        }
+    }
+    catch(err){
+        res.status(400).send("something went wrong")
+    }
+    //this is "find (by providing any filter)"
+    // try{
+    //     const users = await User.find({emailId:userEmail})
+    //     if (users.length===0){
+    //         res.status(404).send("email not found")
+    //     }
+    //     else{
+    //         res.send(users)
+    //     }
+    // }
+
+    // catch(err){
+    //     res.status(400).send("something went wrong")
+    // }
+})
+
+
+// get all the user profiles from database (feed api)
+app.get("/feed",async(req,res)=>{
+    try{
+        const users = await User.find({})
+        res.send(users)
+    }
+    catch(err){
+        res.status(400).send("something went wrong")
+    }
+})
+
+//delete a user from database
+app.delete("/user",async(req,res)=>{
+    const userId = req.body.userId
+    try{
+        const users = await User.findByIdAndDelete(userId) //or we also use await User.findByIdAndDelete({_id:userId}) 
+        res.send("User deleted Successfully")
+    }
+    catch(err){
+        res.status(400).send("something went wrong")
+    }
+})
+
+//update a user
+app.patch("/user",async(req,res)=>{
+    const data = req.body
+    const userId = req.body.userId
+    try{
+        const users = await User.findByIdAndUpdate({_id:userId},data) // we can also give like this const users = await User.findByIdAndUpdate(userId,data)
+        res.send("user updated successfully")
+    }
+    catch(err){
+        res.status(400).send("something went wrong")
+    }
+})
+
+
 connectDB()
     .then(()=>{
     console.log("db connection established successfully");

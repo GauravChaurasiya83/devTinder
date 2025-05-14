@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const validator = require("validator")
 
 
 const userSchema = new mongoose.Schema({
@@ -15,10 +16,20 @@ const userSchema = new mongoose.Schema({
         required:true,
         unique:true,
         trim:true,
-        lowercase:true
+        lowercase:true,
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("invalid email address:" + value)
+            }
+        }
     },
     password:{
-        type:String
+        type:String,
+        validate(value){
+            if(!validator.isStrongPassword(value)){
+                throw new Error("password is not strong:" + value)
+            }
+        }
     },
     age:{
         type:Number,
@@ -42,7 +53,12 @@ const userSchema = new mongoose.Schema({
     },
     photoUrl:{
         type:String,
-        default:"https://www.shutterstock.com/search/default-user"
+        default:"https://www.shutterstock.com/search/default-user",
+        validate(value){
+            if(!validator.isURL(value)){
+                throw new Error("invalid photo url:" + value)
+            }
+        }
     }
 },{
     timestamps:true

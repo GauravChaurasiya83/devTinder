@@ -233,12 +233,14 @@ app.post("/login",async(req,res)=>{
         throw new Error("Invalid Credentials")
     }
 
-    const isPasswordValid = await bcrypt.compare(password,user.password)
+    const isPasswordValid = await user.validatePassword(password) //this function is also coming userSchema
 
     if(isPasswordValid){
 
         //Create a JWT token
-        const token  = await jwt.sign({_id:user._id},"devTinder@789",{expiresIn:"2d"}) //means it will expire in 2 day
+        //const token = await jwt.sign({_id:user._id},"devTinder@789",{expiresIn:"2d"}) //iske sath kch galat nhi tha but we can do better
+        const token  = await user.getJWT() //this is a better industry level practice
+        //this getJWT function is coming from user.js
         console.log(token);
         
         //Add the token to the cookie and send the response back to the user along with this cookie  

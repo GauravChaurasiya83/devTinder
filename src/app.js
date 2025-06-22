@@ -167,7 +167,7 @@ const jwt = require("jsonwebtoken")
 //             throw new Error("Update not allowed")
 //         }
 //         const users = await User.findByIdAndUpdate({_id:userId},data,{
-//             runValidators:true //this will validate if the gender whihc is being passed is valide or not
+//             runValidators:true //this will validate if the gender which is being passed is valide or not
 //         }) // we can also give like this const users = await User.findByIdAndUpdate(userId,data)
 //         res.send("user updated successfully")
 //     }

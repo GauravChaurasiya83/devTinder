@@ -61,7 +61,7 @@ authRouter.post("/login",async(req,res)=>{
         //const token = await jwt.sign({_id:user._id},"devTinder@789",{expiresIn:"2d"}) //iske sath kch galat nhi tha but we can do better
         const token  = await user.getJWT() //this is a better industry level practice
         //this getJWT function is coming from user.js
-        console.log(token);
+        // console.log(token);
         
         //Add the token to the cookie and send the response back to the user along with this cookie  
 
